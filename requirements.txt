@@ -1,0 +1,14 @@
+africastalking==1.2.3
+beautifulsoup4==4.9.1
+bs4==0.0.1
+DateTime==4.3
+gsheets==0.5
+pandas==1.1.0
+python-dotenv==0.14.0
+requests==2.24.0
+six==1.15.0
+dask==2.22.0
+dask[complete]==1.1.1
+toolz==0.10.0
+fsspec==0.3.3
+gspread==3.6.0
