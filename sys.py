@@ -1,5 +1,6 @@
-### This is the code for automatic system of sending airtime and SMS ###
-### Code was initially implemented by Yuan Yuan ###
+### Below is python code for automatically sending an SMS and airtime to survey respondents whose information is stored in a google sheet ###
+# The sample is done for respondents in Nigeria and Kenya but can be adapted for any Africas Talking service country 
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -32,10 +33,10 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('serviceAccount.json', 
 client = gspread.authorize(creds)
 
 # open specific google sheet #
-sheet = client.open('KYNG_users_phone_export_followup').sheet1
+sheet = client.open('your_google_sheet_name').sheet1
 google_sheet_data = sheet.get_all_records()
 rawData = pd.read_json(json.dumps(google_sheet_data))
-rawData.columns = ["timestamp", "last_name", "first_name", "phone_nbr", "country1"]
+rawData.columns = ["timestamp", "last_name", "first_name", "phone_nbr", "country1"] # these are the columns of the google sheet - you can remove/edit here to fit your google sheet structure
 data = rawData
 # reformatting time stamp
 data["timestamp"] = data["timestamp"].apply(lambda x: datetime.datetime.strptime(str(x), '%Y-%m-%d %H:%M:%S'))
@@ -65,19 +66,19 @@ for i in reversed(range(rows)):
 
     # Only send money if row's date is yesterday
     if date.date() == yesterday.date():
-        if country1 == "Kenya":
+        if country1 == "Kenya": # note: depending on how users' country is retrieved (e.g. open text or selected answer option you may want to include cleaning code to ensure the country name follows the structure you specify here and below for Nigeria)
             username = kenya_username
             sender_id = os.getenv('SENDER_ID') 
             country_code = "254"
             currency_code = "KES"
-            amount = "25"
+            amount = "50"
             api_key = kenya_api_key
         elif country1 == "Nigeria":
             username = nigeria_username
             sender_id = None
             country_code = "234"
             currency_code = "NGN"
-            amount = "100"
+            amount = "200"
             api_key = nigeria_api_key
 
         phone_nbr = clean_phone_nbr(phone)
